@@ -1,11 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template_string
 import google.generativeai as genai
 
 app = Flask(__name__)
 
-# Set up the Google Gemini API key
-genai.configure(api_key="AIzaSyBMfK_Vj4acUcMAglRdtZ3OmrKr82dLzts")
+# Configure the Google Gemini API
+genai.configure(api_key="YOUR_GOOGLE_GEMINI_API_KEY")
 
+# Root route to serve a simple message or a basic HTML page
+@app.route('/')
+def home():
+    return render_template_string("<h1>Welcome to the SQL Query Generator</h1>")
+
+# Route for generating SQL
 @app.route('/generate-sql', methods=['POST'])
 def generate_sql():
     data = request.get_json()
@@ -14,12 +20,11 @@ def generate_sql():
     if not user_query:
         return jsonify({"error": "No query provided"}), 400
 
-    # Interact with the Gemini model
     try:
         response = genai.generate_text(
             model="YOUR_GEMINI_MODEL_NAME",
             prompt=user_query,
-            max_output_tokens=150  # Adjust as needed for your SQL query length
+            max_output_tokens=150
         )
         sql_query = response.result if response.result else "No query generated."
         return jsonify({"sql_query": sql_query})
