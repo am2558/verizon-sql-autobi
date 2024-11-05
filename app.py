@@ -3,15 +3,13 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# Configure the Google Gemini API
 genai.configure(api_key="YOUR_GOOGLE_GEMINI_API_KEY")
 
-# Root route to serve a simple message or a basic HTML page
+
 @app.route('/')
 def home():
     return render_template_string("<h1>Welcome to the SQL Query Generator</h1>")
 
-# Route for generating SQL
 @app.route('/generate-sql', methods=['POST'])
 def generate_sql():
     data = request.get_json()
