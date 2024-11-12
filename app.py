@@ -1,8 +1,7 @@
 import os
 import pandas as pd
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import google.generativeai as genai
-import tempfile
 
 app = Flask(__name__)
 
@@ -26,6 +25,11 @@ def generate_sql_prompt(schema, query):
         f"{query}\n"
     )
     return prompt
+
+@app.route('/')
+def index():
+    # Serve the index.html file at the root
+    return send_file('index.html')
 
 @app.route('/generate-sql', methods=['POST'])
 def generate_sql():
