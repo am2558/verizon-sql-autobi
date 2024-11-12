@@ -5,7 +5,6 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# Configure the Gemini API with your API key from the environment variable
 genai.configure(api_key="AIzaSyBMfK_Vj4acUcMAglRdtZ3OmrKr82dLzts")
 
 def parse_csv(file):
