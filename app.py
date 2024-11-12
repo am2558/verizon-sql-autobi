@@ -6,7 +6,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 # Configure the Gemini API with your API key from the environment variable
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=os.getenv("AIzaSyBMfK_Vj4acUcMAglRdtZ3OmrKr82dLzts"))
 
 def parse_csv(file):
     # Load CSV and extract schema
