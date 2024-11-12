@@ -28,32 +28,37 @@ def generate_sql_prompt(schema, query):
 
 @app.route('/')
 def index():
-    # Serve the index.html file at the root
     return send_file('index.html')
 
 @app.route('/generate-sql', methods=['POST'])
 def generate_sql():
-    if 'csvFile' not in request.files:
-        return jsonify({"error": "No CSV file uploaded"}), 400
+    try:
+        if 'csvFile' not in request.files:
+            return jsonify({"error": "No CSV file uploaded"}), 400
 
-    csv_file = request.files['csvFile']
-    query = request.form.get('query', '')
+        csv_file = request.files['csvFile']
+        query = request.form.get('query', '')
 
-    if not query:
-        return jsonify({"error": "No query provided"}), 400
+        if not query:
+            return jsonify({"error": "No query provided"}), 400
+        
+        schema = parse_csv(csv_file)
 
-    # Parse CSV to extract schema
-    schema = parse_csv(csv_file)
+        prompt = generate_sql_prompt(schema, query)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
 
-    # Generate prompt and call LLM
-    prompt = generate_sql_prompt(schema, query)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(prompt)
+        # Check response from the API
+        if response and hasattr(response, 'text'):
+            sql_query = response.text
+        else:
+            sql_query = "Could not generate SQL query."
 
-    # Extract the generated text from the response
-    sql_query = response.text if response and hasattr(response, 'text') else "Could not generate SQL query."
-
-    return jsonify({"sql_query": sql_query})
+        return jsonify({"sql_query": sql_query})
+    
+    except Exception as e:
+        print(f"Error generating query: {e}")
+        return jsonify({"sql_query": f"Error generating query: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
