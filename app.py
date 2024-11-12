@@ -1,33 +1,55 @@
-from flask import Flask, request, jsonify, render_template_string
+import os
+import pandas as pd
+from flask import Flask, request, jsonify
 import google.generativeai as genai
+import tempfile
 
 app = Flask(__name__)
 
-genai.configure(api_key="YOUR_GOOGLE_GEMINI_API_KEY")
+# Configure the Gemini API with your API key from the environment variable
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
+def parse_csv(file):
+    # Load CSV and extract schema
+    df = pd.read_csv(file)
+    schema = {
+        "columns": df.columns.tolist(),
+        "types": df.dtypes.astype(str).tolist()
+    }
+    return schema
 
-@app.route('/')
-def home():
-    return render_template_string("<h1>Welcome to the SQL Query Generator</h1>")
+def generate_sql_prompt(schema, query):
+    # Craft prompt for LLM based on schema and user query
+    columns = ", ".join([f"{name} ({dtype})" for name, dtype in zip(schema["columns"], schema["types"])])
+    prompt = (
+        f"Given a table with columns: {columns}, generate an SQL query for the following request:\n"
+        f"{query}\n"
+    )
+    return prompt
 
 @app.route('/generate-sql', methods=['POST'])
 def generate_sql():
-    data = request.get_json()
-    user_query = data.get("query")
+    if 'csvFile' not in request.files:
+        return jsonify({"error": "No CSV file uploaded"}), 400
 
-    if not user_query:
+    csv_file = request.files['csvFile']
+    query = request.form.get('query', '')
+
+    if not query:
         return jsonify({"error": "No query provided"}), 400
 
-    try:
-        response = genai.generate_text(
-            model="YOUR_GEMINI_MODEL_NAME",
-            prompt=user_query,
-            max_output_tokens=150
-        )
-        sql_query = response.result if response.result else "No query generated."
-        return jsonify({"sql_query": sql_query})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Parse CSV to extract schema
+    schema = parse_csv(csv_file)
+
+    # Generate prompt and call LLM
+    prompt = generate_sql_prompt(schema, query)
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
+
+    # Extract the generated text from the response
+    sql_query = response.text if response and hasattr(response, 'text') else "Could not generate SQL query."
+
+    return jsonify({"sql_query": sql_query})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

@@ -1,51 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Query Generator</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
-        #output { margin-top: 20px; white-space: pre-wrap; }
-    </style>
-</head>
-<body>
+<h1>SQL Query Generator</h1>
+<label for="csvFile">Upload CSV File:</label>
+<input type="file" id="csvFile" accept=".csv">
+<br><br>
+<label for="input">Enter your request:</label>
+<textarea id="input" rows="4" cols="50" placeholder="Describe your query in plain language..."></textarea>
+<br>
+<button onclick="generateQuery()">Generate SQL</button>
 
-    <h1>SQL Query Generator</h1>
-    <label for="input">Enter your request:</label>
-    <textarea id="input" rows="4" cols="50" placeholder="Describe your query in plain language..."></textarea>
-    <br>
-    <button onclick="generateQuery()">Generate SQL</button>
+<h2>Generated SQL Query</h2>
+<pre id="output">Your SQL query will appear here.</pre>
 
-    <h2>Generated SQL Query</h2>
-    <pre id="output">Your SQL query will appear here.</pre>
+<script>
+    async function generateQuery() {
+        const userInput = document.getElementById('input').value;
+        const csvFile = document.getElementById('csvFile').files[0];
+        const output = document.getElementById('output');
 
-    <script>
-        async function generateQuery() {
-            const userInput = document.getElementById('input').value;
-            const output = document.getElementById('output');
-
-            if (!userInput) {
-                output.textContent = "Please enter a query.";
-                return;
-            }
-
-            output.textContent = "Generating query...";
-
-            try {
-                const response = await fetch('http://localhost:5000/generate-sql', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: userInput })
-                });
-
-                const data = await response.json();
-                output.textContent = data.sql_query || "No query generated.";
-            } catch (error) {
-                output.textContent = "Error generating query. Please try again.";
-            }
+        if (!userInput || !csvFile) {
+            output.textContent = "Please upload a CSV file and enter a query.";
+            return;
         }
-    </script>
 
-</body>
-</html>
+        output.textContent = "Generating query...";
+
+        const formData = new FormData();
+        formData.append('csvFile', csvFile);
+        formData.append('query', userInput);
+
+        try {
+            const response = await fetch(`${window.location.origin}/generate-sql`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            output.textContent = data.sql_query || "No query generated.";
+        } catch (error) {
+            output.textContent = "Error generating query. Please try again.";
+        }
+    }
+</script>
