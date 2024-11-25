@@ -1,7 +1,7 @@
 # Verizon 4 SQL AutoBI Tool
 
 ## Oveview
-The SQL Query Generator is a two-part application (backend and frontend) designed to create SQL queries based on natural language prompts. It uses:
+The SQL Query Generator is an app designed to create SQL queries based on natural language prompts. It uses:
 
 - Google Gemini API for generating SQL queries.
 - Flask as the backend framework.
