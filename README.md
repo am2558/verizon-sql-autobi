@@ -11,6 +11,24 @@ https://lms.ecornell.com/courses/1788003/pages/step-2-ensure-your-project-readme
 -->
 
 
+## Table of Contents
+
+| Section |
+| --- |
+| [Project Overview](#project-overview) |
+| [Objectives and Goals](#objectives-and-goals) |
+| [Methodology](#methodology) |
+| [Results and Key Findings](#results-and-key-findings) |
+| [Visualizations](#visualizations) |
+| [Potential Next Steps](#potential-next-steps) |
+| [Sample Datasets](#sample-datasets) |
+| [Colab Notebooks](#colab-notebooks) |
+| [Installation Instructions](#installation-instructions) |
+| [License](#license) |
+| [Credits and Acknowledgments](#credits-and-acknowledgments) |
+| [Individual Contributions](#individual-contributions) |
+
+
 ## Project Overview
 
 This is our group's second project for Break Through Tech AI's Fall 2024 AI Studio program. To learn more about our first project, visit our GitHub repo here: https://github.com/Verizon-4/Foliage
@@ -67,13 +85,6 @@ If given more time, we would enhance the model's capabilities by adding image re
 We could also combine our two Verizon AI Studio Projects by integrating Reinforcement Learning with AI Feedback (RLAIF) into the interactive tool for evaluating CV model performance. For a given set of images, we would use autoBI to query the network dataset about network performance at the location of each image.
 
 
-## Individual Contributions
-
-Adya Mohanty: Built the entire frontend (HTML/CSS) and backend (Python Flask) for the web application and deployed it using Render.
-
-Vivian Liu: Communicated with Verizon Challenge Advisors through the transition from the Foliage Project to current AutoBI project. Authored notebook (`Vivian_AutoBI_LLM.ipynb`) exploring and fine-tuning the Gemini LLM. Wrote README.
-
-
 ## Sample Datasets
 
 The dataset we used for testing is [Telco Customer Churn](https://www.kaggle.com/datasets/abdallahwagih/telco-customer-churn?resource=download) by Kaggle. To download this dataset, run the following command in your terminal:
@@ -93,3 +104,22 @@ Our notebooks are all located in this repository and have a `.ipynb` extension.
 To run the Colab notebook, ensure you have the following installed: Python, pandas, seaborn, sklearn.
 
 Run the web app through the following link: https://verizon-sql-autobi.onrender.com/
+
+
+## License
+
+Apache License 2.0
+
+
+## Credits and Acknowledgments
+
+Team Members: Adya Mohanty, Hridia Tanha, Katherine Chang Wu, Kiran Mitra, Vivian Liu  
+Verizon Challenge Advisors: Arthur Lusty, Arun Vonoz, Michael Hanson, Priyanka Giglio  
+TA: Yu-Chi (Kade) Lin
+
+
+## Individual Contributions
+
+Adya Mohanty: Built the entire frontend (HTML/CSS) and backend (Python Flask) for the web application and deployed it using Render.
+
+Vivian Liu: Communicated with Verizon Challenge Advisors through the transition from the Foliage Project to current AutoBI project. Authored notebook (`Vivian_AutoBI_LLM.ipynb`) exploring and fine-tuning the Gemini LLM. Wrote README.
