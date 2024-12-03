@@ -103,7 +103,7 @@ Our notebooks are all located in this repository and have a `.ipynb` extension.
 
 To run the Colab notebook, ensure you have the following installed: Python, pandas, seaborn, sklearn.
 
-Run the web app through the following link: https://verizon-sql-autobi.onrender.com/
+Run the web app using the following link: https://verizon-sql-autobi.onrender.com/
 
 
 ## License
